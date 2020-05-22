@@ -52,6 +52,10 @@ io.on('connection',(socket) => {
         }   
 
         const user = getUser( socket.id )
+        
+        if( !user ){
+            callback('Usuario no ha sido definido')
+        }
 
         io.to(user.room).emit('NewMsg', generateTextObject(user.nickname, message) )
         callback() // callback que envia un valor de respuesta en blanco, si todo ok
@@ -61,6 +65,11 @@ io.on('connection',(socket) => {
     socket.on('sendGeolocation', (pos, callback) => {
 
         const user = getUser( socket.id )
+        
+        if( !user ){
+            callback('Usuario no ha sido definido')
+        }
+
         io.to(user.room).emit('sendLocationMsg',  generateGeolocationObject(user.nickname,`https://google.com/maps?q=${pos.lat},${pos.long}`) )
 
         callback('Geodata OK..')
